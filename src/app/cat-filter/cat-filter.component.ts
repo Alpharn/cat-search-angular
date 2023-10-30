@@ -35,10 +35,8 @@ export class CatFilterComponent implements OnInit  {
       limit: [10]
     });
   
-    this.route.data.subscribe(({ breeds }) => {
-      this.availableBreeds = breeds;
-      this.loadInitialCats();
-    });
+    this.availableBreeds = this.route.snapshot.data['breeds'];
+    this.loadInitialCats();
 
   }
 
