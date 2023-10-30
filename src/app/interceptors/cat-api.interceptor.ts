@@ -5,14 +5,19 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable } from "rxjs";
 
 @Injectable()
 export class CatApiInterceptor implements HttpInterceptor {
 
   constructor() {}
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    return next.handle(request);
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const modifiedRequest = request.clone({
+      setHeaders: {
+        'x-api-key': 'live_xzqiATMoX9JoRJmUezRFqDwCkamahejdXNLIsRtSVV5YuBTE6JplnfCJuLA5gpbT'
+      }
+    });
+    return next.handle(modifiedRequest);
   }
 }
