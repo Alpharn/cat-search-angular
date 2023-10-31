@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 import { State } from 'src/app/store/reducers/cat.reducer';
 import { loadPhotos } from 'src/app/store/actions/cat.actions';
 import * as fromCatSelectors from 'src/app/store/selectors/cat.selectors';
-import { CatBreed, CatPhoto } from '../interfaces/cat.interface';
+import { ICatBreed, ICatPhoto } from '../interfaces/cat.interface';
 
 @Component({
   selector: 'app-cat-filter',
@@ -17,9 +17,9 @@ import { CatBreed, CatPhoto } from '../interfaces/cat.interface';
 export class CatFilterComponent implements OnInit  {
 
   catForm!: FormGroup;
-  availableBreeds: CatBreed[] = [];
+  availableBreeds: ICatBreed[] = [];
   limits: number[] = [5, 10, 15, 25, 50, 100];
-  photos$: Observable<CatPhoto[]> = this.store.select(fromCatSelectors.selectPhotos);
+  photos$: Observable<ICatPhoto[]> = this.store.select(fromCatSelectors.selectPhotos);
   isLoading$: Observable<boolean> = this.store.select(fromCatSelectors.selectLoading);
   hasError$: Observable<boolean> = this.store.select(fromCatSelectors.selectError);
 

@@ -1,11 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
 import { loadPhotos, photosLoaded, photosLoadError } from '../actions/cat.actions';
-import { CatPhoto } from "src/app/interfaces/cat.interface";
+import { ICatPhoto } from "src/app/interfaces/cat.interface";
 
 export const catFeatureKey = 'cat';
 
 export interface State {
-  photos: CatPhoto[];
+  photos: ICatPhoto[];
   loading: boolean;
   error: boolean;
 }

@@ -3,9 +3,9 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { CatApiService } from '../services/cat-api.service';
 import { inject } from '@angular/core';
 
-import { CatBreed } from '../interfaces/cat.interface';
+import { ICatBreed } from '../interfaces/cat.interface';
 
-export const breedResolver: ResolveFn<CatBreed[]> =
+export const breedResolver: ResolveFn<ICatBreed[]> =
   (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     return inject(CatApiService).getBreeds();
   };

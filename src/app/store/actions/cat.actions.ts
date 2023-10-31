@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CatPhoto } from 'src/app/interfaces/cat.interface';
+import { ICatPhoto } from 'src/app/interfaces/cat.interface';
 
 /**
  * Triggers a request to load cat photos.
@@ -15,7 +15,7 @@ export const loadPhotos = createAction('[Cat Component] Load Photos', props<{ br
  *
  * @param photos Array of CatPhoto objects that contain the details of each photo.
  */
-export const photosLoaded = createAction('[Cat API] Photos Loaded Success', props<{ photos: CatPhoto[] }>());
+export const photosLoaded = createAction('[Cat API] Photos Loaded Success', props<{ photos: ICatPhoto[] }>());
 
 /** Represents an error that occurred while loading cat photos. */
 export const photosLoadError = createAction('[Cat API] Photos Load Error');

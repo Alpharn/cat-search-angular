@@ -1,10 +1,10 @@
-export interface CatBreed {
+export interface ICatBreed {
     id: string;
     name: string;
 }
 
-export interface CatPhoto {
+export interface ICatPhoto {
   id: string;
   url: string;
-  breeds: CatBreed[];
+  breeds: ICatBreed[];
 }
