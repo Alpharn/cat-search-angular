@@ -8,3 +8,8 @@ export interface ICatPhoto {
   url: string;
   breeds: ICatBreed[];
 }
+
+export interface ICatFormValues {
+  breeds: string[];
+  limit: number;
+}
