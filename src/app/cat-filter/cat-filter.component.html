@@ -4,9 +4,9 @@
       <mat-form-field appearance="fill">
         <mat-label>Breeds</mat-label>
         <mat-select formControlName="breeds" multiple>
-          <mat-option value="all">All</mat-option>
-          <mat-option value="none">None</mat-option>
-          <mat-option *ngFor="let breed of availableBreeds" [value]="breed.id">{{ breed.name }}</mat-option>
+          <mat-option [disabled]="isNoneSelected()" value="all">All</mat-option>
+          <mat-option [disabled]="isAllSelected()" value="none">None</mat-option>
+          <mat-option *ngFor="let breed of availableBreeds" [disabled]="isAllOrNoneSelected()" [value]="breed.id">{{ breed.name }}</mat-option>
         </mat-select>
       </mat-form-field>
     
@@ -16,22 +16,16 @@
           <mat-option *ngFor="let limit of limits" [value]="limit">{{limit}}</mat-option>
         </mat-select>
       </mat-form-field>
-    
-      <button id="load" class="load-btn" mat-fab extended color="primary" (click)="loadCats()">
-        <ng-container *ngIf="(isLoading$ | async) === false">
-          <span class="button-content">
-            Meow
-            <mat-icon>pets</mat-icon>
-          </span>
-        </ng-container>
-        <mat-spinner class="spinner" *ngIf="isLoading$ | async" diameter="30" mode="indeterminate"></mat-spinner>
-      </button>
+        
     </form>
-    
-    <div class="photos-grid" *ngIf="photos$ | async as photos">
-      <div class="photo-container" *ngFor="let photo of photos">
-        <img class="photo" [src]="photo.url" alt="Photo of cat" />
+
+    <mat-spinner class="spinner" *ngIf="isLoading$ | async" diameter="60" mode="indeterminate"></mat-spinner>
+    <ng-container *ngIf="(isLoading$ | async) === false">
+      <div class="photos-grid" *ngIf="photos$ | async as photos">
+        <div class="photo-container" *ngFor="let photo of photos">
+          <img class="photo" [src]="photo.url" alt="Photo of cat" />
+        </div>
       </div>
-    </div>
-  
+    </ng-container>
+    
   </div>

@@ -9,7 +9,7 @@ const routes: Routes = [
     path: '',
     component: CatFilterComponent,
     resolve: { breeds: breedResolver }
-}
+  }
 ];
 
 @NgModule({

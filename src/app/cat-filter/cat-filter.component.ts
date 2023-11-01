@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy  } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
+import { takeUntil } from 'rxjs/operators';
 
 import { State } from 'src/app/store/reducers/cat.reducer';
 import { loadPhotos } from 'src/app/store/actions/cat.actions';
@@ -12,8 +13,10 @@ import { ICatBreed, ICatPhoto } from '../interfaces/cat.interface';
 @Component({
   selector: 'app-cat-filter',
   templateUrl: './cat-filter.component.html',
-  styleUrls: ['./cat-filter.component.scss']
+  styleUrls: ['./cat-filter.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class CatFilterComponent implements OnInit  {
 
   catForm!: FormGroup;
@@ -21,7 +24,10 @@ export class CatFilterComponent implements OnInit  {
   limits: number[] = [5, 10, 15, 25, 50, 100];
   photos$: Observable<ICatPhoto[]> = this.store.select(fromCatSelectors.selectPhotos);
   isLoading$: Observable<boolean> = this.store.select(fromCatSelectors.selectLoading);
-  hasError$: Observable<boolean> = this.store.select(fromCatSelectors.selectError);
+  private destroy$ = new Subject<void>();
+
+  private readonly ALL = 'all';
+  private readonly NONE = 'none';
 
   constructor (  
     private fb: FormBuilder,
@@ -31,30 +37,54 @@ export class CatFilterComponent implements OnInit  {
 
   ngOnInit(): void {
     this.catForm = this.fb.group({
-      breeds: [['all']],
+      breeds: [[this.ALL]],
       limit: [10]
     });
   
     this.availableBreeds = this.route.snapshot.data['breeds'];
+  
     this.loadInitialCats();
+  
+    this.catForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(val => {
+      this.handleFormChanges(val);
+    });
+  }
+  
+  handleFormChanges(formValue: any): void {
+    const breeds = formValue.breeds as string[];
+    
+    let breedIds: string[] = breeds.includes(this.ALL) ? [] : breeds;
+  
+    if (breeds.includes(this.NONE)) {
+      breedIds = [this.NONE];
+      this.catForm.get('breeds')?.setValue([this.NONE], { emitEvent: false });
+    } else if (breeds.includes(this.ALL)) {
+      this.catForm.get('breeds')?.setValue([this.ALL], { emitEvent: false });
+    }
+    
+    this.store.dispatch(loadPhotos({ breed: breedIds, limit: formValue.limit }));
+  }
 
+  isAllSelected(): boolean {
+    return this.catForm.get('breeds')?.value.includes(this.ALL);
+  }
+  
+  isNoneSelected(): boolean {
+    return this.catForm.get('breeds')?.value.includes(this.NONE);
+  }
+  
+  isAllOrNoneSelected(): boolean {
+    return this.isAllSelected() || this.isNoneSelected();
   }
 
   loadInitialCats(): void {
-    const breed = this.catForm.value.breeds.includes('all') ? undefined : this.catForm.value.breeds[0];
-    const limit = this.catForm.value.limit;
-    this.store.dispatch(loadPhotos({ breed: breed, limit: limit }));
+    const limit = this.catForm.value.limit as number;
+    this.store.dispatch(loadPhotos({ breed: [], limit }));
   }
 
-  loadCats(): void {
-    const formValue = this.catForm.value;
-    let selectedBreeds: string[] = formValue.breeds;
-    
-    if (selectedBreeds.includes('all')) {
-      selectedBreeds = [];
-    }
-
-    this.store.dispatch(loadPhotos({ breed: selectedBreeds, limit: formValue.limit }));
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }
