@@ -3,7 +3,7 @@ import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as catActions from '../actions/cat.actions';
-import { CatApiService } from 'src/app/services/cat-api.service';
+import { CatApiService } from 'src/app/cat-filter/services/cat-api.service';
 
 @Injectable()
 export class CatEffects {

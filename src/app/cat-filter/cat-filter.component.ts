@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { Observable, Subject } from "rxjs";
 import { takeUntil } from 'rxjs/operators';
 
+import { limits } from "../constants/constants";
 import { State } from 'src/app/store/reducers/cat.reducer';
 import { loadPhotos } from 'src/app/store/actions/cat.actions';
 import * as fromCatSelectors from 'src/app/store/selectors/cat.selectors';
@@ -22,15 +23,12 @@ import { ICatBreed, ICatPhoto, ICatFormValues } from '../interfaces/cat.interfac
 })
 
 export class CatFilterComponent implements OnInit  {
-  
-  /** Form group to handle breed and photo quantity filters */
-  catForm!: FormGroup;
 
   /** List of all available cat breeds fetched from the route's data */
   availableBreeds: ICatBreed[] = [];
 
   /** Predefined limits for the number of photos to display */
-  limits: number[] = [5, 10, 15, 25, 50, 100];
+  limits: number[] = limits;
   
   /** Observable stream of cat photos */
   photos$: Observable<ICatPhoto[]> = this.store.select(fromCatSelectors.selectPhotos);
@@ -45,6 +43,12 @@ export class CatFilterComponent implements OnInit  {
   private readonly ALL = 'all';
   private readonly NONE = 'none';
 
+  /** Form group to handle breed and photo quantity filters */
+  catForm: FormGroup = this.fb.group({
+    breeds: [[this.ALL]],
+    limit: [10]
+  });
+
   constructor (  
     private fb: FormBuilder,
     private store: Store<State>,
@@ -52,13 +56,7 @@ export class CatFilterComponent implements OnInit  {
   ) {}
 
   ngOnInit(): void {
-    this.catForm = this.fb.group({
-      breeds: [[this.ALL]],
-      limit: [10]
-    });
-  
     this.availableBreeds = this.route.snapshot.data['breeds'];
-  
     this.loadInitialCats();
   
     // Handle form changes with a clean-up mechanism using takeUntil

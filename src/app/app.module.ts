@@ -17,6 +17,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { CatApiInterceptor } from './interceptors/cat-api.interceptor';
 import { reducer as catReducer, catFeatureKey } from './store/reducers/cat.reducer';
 import { CatEffects } from './store/effects/cat.effects';
+import { CatApiService } from './cat-filter/services/cat-api.service'
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { CatEffects } from './store/effects/cat.effects';
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
   ],
   providers: [
+    CatApiService,
     { provide: HTTP_INTERCEPTORS, useClass: CatApiInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]

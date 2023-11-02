@@ -2,14 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ICatBreed, ICatPhoto } from '../interfaces/cat.interface';
+import { ICatBreed, ICatPhoto } from '../../interfaces/cat.interface';
 
 /**
  * Service to interact with TheCatAPI for retrieving cat breeds and searching for cat photos.
  */
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 
 export class CatApiService {
 
