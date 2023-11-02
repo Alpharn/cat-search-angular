@@ -1,0 +1,31 @@
+  <div class="container">
+    <form class="form-group" [formGroup]="catForm">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Breeds</mat-label>
+        <mat-select formControlName="breeds" multiple>
+          <mat-option [disabled]="isNoneSelected()" value="all">All</mat-option>
+          <mat-option [disabled]="isAllSelected()" value="none">None</mat-option>
+          <mat-option *ngFor="let breed of availableBreeds" [disabled]="isAllOrNoneSelected()" [value]="breed.id">{{ breed.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    
+      <mat-form-field appearance="outline">
+        <mat-label>Quantity of results</mat-label>
+        <mat-select formControlName="limit">
+          <mat-option *ngFor="let limit of limits" [value]="limit">{{limit}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+        
+    </form>
+
+    <mat-spinner class="spinner" *ngIf="isLoading$ | async" diameter="60" mode="indeterminate"></mat-spinner>
+    <ng-container *ngIf="(isLoading$ | async) === false">
+      <div class="photos-grid" *ngIf="photos$ | async as photos">
+        <div class="photo-container" *ngFor="let photo of photos">
+          <img class="photo" [src]="photo.url" alt="Photo of cat" />
+        </div>
+      </div>
+    </ng-container>
+    
+  </div>
